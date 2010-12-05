@@ -1,0 +1,45 @@
+h3. Advanced Find plugin
+
+This plugin enables you to sort/merge multiple pages trees in Wolf CMS.
+
+Article considering setup and usage of this plugin can be found at <a href="http://project79.net/articles/making-categories-with-advanced-find-plugin">Project 79</a>
+
+h3. Installation
+
+# download adv-find plugin and unpack it in "wolf/plugins/" folder
+# go to administration->plugins and enable Advanced Find plugin
+
+h3. Usage
+
+Example of your backend Pages:
+
+Home Page
+  |- Category 1
+  |   |- Article 1
+  |   |- Article 2
+  |   |- Article 3
+  |- Category 2
+      |- Article 4
+      |- Article 5
+
+Followed by this line of code to sort them out. 
+
+bc. <?php $articles = adv_find(array('/category-1/','/category-2/','/MORE CATEGORIES/'),array('order'=>'published_on DESC', 'limit'=>5)); ?>
+<?php foreach ($articles as $article): ?>
+<div id="article">
+    <!-- OUR TITLE -->
+        <h1><?php echo $article->link(); ?></h1>
+    <!-- DAVIDS SINGLE PAGE TEASER -->
+<?php if (($more_pos = strpos($article->content(), '<!--more-->')) === false ) {
+        // "more" trigger NOT found, so just echo content
+        echo $article->content();
+} else {
+        // "more" trigger IS found, so echo only teaser and add link to whole article
+        echo substr($article->content(), 0, $more_pos);
+        echo '</p><p class="readmore">'. $article->link('Read more . . .') .'</p>';
+} ?>
+</div>
+<?php endforeach; ?>
+
+NOTE: The limit of children cannot be less then 2!
+
